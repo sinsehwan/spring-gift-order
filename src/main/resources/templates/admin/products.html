@@ -36,17 +36,17 @@
     </tbody>
 </table>
 <div th:if="${products.totalPages > 0}" class="pagination" th:with="page=${products}">
-    <a th:href="${page.first} ? '#' : @{/products(page=${page.number - 1})}"
+    <a th:href="${page.first} ? '#' : @{/admin/products(page=${page.number - 1})}"
        th:classappend="${page.first} ? 'disabled' : ''">&laquo;</a>
 
     <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
         <a th:if="${i >= page.number - 2 and i <= page.number + 2}"
-           th:href="@{/products(page=${i})}"
+           th:href="@{/admin/products(page=${i})}"
            th:text="${i + 1}"
            th:classappend="${page.number == i} ? 'active' : ''"></a>
     </th:block>
 
-    <a th:href="${page.last} ? '#' : @{/products(page=${page.number + 1})}"
+    <a th:href="${page.last} ? '#' : @{/admin/products(page=${page.number + 1})}"
        th:classappend="${page.last} ? 'disabled' : ''">&raquo;</a>
 </div>
 </body>
