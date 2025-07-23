@@ -35,7 +35,7 @@ public class ProductApiAdminController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto requestDto){
-        Product savedProduct = productService.saveProduct(requestDto);
+        productService.saveProduct(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

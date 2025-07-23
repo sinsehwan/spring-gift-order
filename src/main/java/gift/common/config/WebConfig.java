@@ -1,4 +1,4 @@
-package gift.config;
+package gift.common.config;
 
 import gift.auth.AdminInterceptor;
 import gift.auth.LoginInterceptor;

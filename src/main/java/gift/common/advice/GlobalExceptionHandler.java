@@ -1,4 +1,4 @@
-package gift.advice;
+package gift.common.advice;
 
 import gift.product.exception.ProductNotFoundException;
 import gift.wish.exception.WishOwnerException;
