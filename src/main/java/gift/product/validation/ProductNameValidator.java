@@ -22,10 +22,6 @@ public class ProductNameValidator implements ConstraintValidator<ValidProductNam
                 errMsgs.add("상품 이름은 최대 15자입니다.");
             }
 
-            if (value.contains("카카오")) {
-                errMsgs.add("상품 이름에 '카카오'는 포함될 수 없습니다. 담당 MD와 협의해 주세요.");
-            }
-
             if (!ALLOWED_PATTERN.matcher(value).matches()) {
                 errMsgs.add("상품 이름에 허용되지 않은 특수문자가 포함돼 있습니다.(허용 : ( ), [ ], +, -, &, /, _)");
             }

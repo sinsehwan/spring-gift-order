@@ -32,6 +32,12 @@ public class MemberService {
     public MemberTokenResponse registerAdmin(MemberRegisterRequest request) {
         return registerMember(request, RoleType.ADMIN);
     }
+
+    @Transactional
+    public MemberTokenResponse registerMd(MemberRegisterRequest request) {
+        return registerMember(request, RoleType.MD);
+    }
+
     private MemberTokenResponse registerMember(MemberRegisterRequest request, RoleType roleType) {
         if(memberRepository.findByEmail(request.email()).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다: " + request.email());

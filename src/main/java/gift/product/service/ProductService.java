@@ -2,6 +2,7 @@ package gift.product.service;
 
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
+import gift.member.dto.MemberTokenRequest;
 import gift.product.domain.Product;
 import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductOptionRequestDto;
@@ -22,7 +23,9 @@ public class ProductService {
     }
 
     @Transactional
-    public Product saveProduct(ProductRequestDto requestDto){
+    public Product saveProduct(ProductRequestDto requestDto, MemberTokenRequest memberTokenRequest){
+        validateProductNameByRole(requestDto.name(), memberTokenRequest);
+
         Product product = new Product(requestDto.name(), requestDto.price(), requestDto.imageUrl());
         requestDto.options()
                 .stream()
@@ -55,8 +58,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private void validateProductNameByRole(String productName, Member member) {
-        if (productName.contains("카카오") && member.getRole() != RoleType.ADMIN) {
+    private void validateProductNameByRole(String productName, MemberTokenRequest memberTokenRequest) {
+        if (productName.contains("카카오") && memberTokenRequest.role() != RoleType.MD) {
             throw new IllegalArgumentException("상품 이름에 '카카오'는 포함될 수 없습니다. 담당 MD와 협의해 주세요.");
         }
     }

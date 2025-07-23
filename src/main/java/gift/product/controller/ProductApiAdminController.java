@@ -1,7 +1,9 @@
 package gift.product.controller;
 
+import gift.auth.Login;
 import gift.common.enums.ProductSortProperty;
 import gift.common.validation.ValidSort;
+import gift.member.dto.MemberTokenRequest;
 import gift.product.domain.Product;
 import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductRequestDto;
@@ -36,8 +38,8 @@ public class ProductApiAdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto requestDto){
-        productService.saveProduct(requestDto);
+    public ResponseEntity<Void> addProduct(@Login MemberTokenRequest memberTokenRequest, @RequestBody @Valid ProductRequestDto requestDto){
+        productService.saveProduct(requestDto, memberTokenRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

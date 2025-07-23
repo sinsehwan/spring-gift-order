@@ -1,7 +1,10 @@
 package gift.product.controller;
 
 import gift.common.ControllerTestTemplate;
+import gift.member.domain.Member;
 import gift.member.dto.MemberRegisterRequest;
+import gift.member.dto.MemberTokenRequest;
+import gift.member.repository.MemberRepository;
 import gift.member.service.MemberService;
 import gift.product.domain.Product;
 import gift.product.dto.ProductOptionRequestDto;
@@ -36,6 +39,9 @@ class ProductOptionApiControllerTest extends ControllerTestTemplate {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     private Product testProduct;
     private String userToken;
 
@@ -47,8 +53,12 @@ class ProductOptionApiControllerTest extends ControllerTestTemplate {
         ProductOptionRequestDto option2 = new ProductOptionRequestDto("색상-레드", 50);
         ProductOptionRequestDto option3 = new ProductOptionRequestDto("사이즈-XL", 30);
 
+        Member member = memberRepository.findByEmail("user@test.com").get();
+        MemberTokenRequest tokenRequest = new MemberTokenRequest(member.getId(), member.getEmail(), member.getPassword(), member.getRole());
+
+
         ProductRequestDto productRequest = new ProductRequestDto("테스트 상품", 15000, "test.jpg", List.of(option1, option2, option3));
-        testProduct = productService.saveProduct(productRequest);
+        testProduct = productService.saveProduct(productRequest, tokenRequest);
     }
 
     @Test

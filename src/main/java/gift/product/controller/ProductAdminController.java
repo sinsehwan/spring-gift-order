@@ -1,7 +1,9 @@
 package gift.product.controller;
 
+import gift.auth.Login;
 import gift.common.enums.ProductSortProperty;
 import gift.common.validation.ValidSort;
+import gift.member.dto.MemberTokenRequest;
 import gift.product.domain.Product;
 import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductInfoDto;
@@ -65,13 +67,17 @@ public class ProductAdminController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute("product") @Valid ProductRequestDto requestDto, BindingResult bindingResult){
+    public String addProduct(
+            @Login MemberTokenRequest memberTokenRequest,
+            @ModelAttribute("product") @Valid ProductRequestDto requestDto,
+            BindingResult bindingResult
+    ){
 
         if(bindingResult.hasErrors()){
             return "admin/product-add-form";
         }
 
-        productService.saveProduct(requestDto);
+        productService.saveProduct(requestDto, memberTokenRequest);
         return "redirect:/admin/products";
     }
 
