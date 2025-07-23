@@ -38,7 +38,7 @@ public class ProductOptionService {
     }
 
     public void deleteOption(Long optionId) {
-        ProductOption option = productOptionRepository.findById(optionId)
+        productOptionRepository.findById(optionId)
                 .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
         productOptionRepository.deleteById(optionId);

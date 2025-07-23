@@ -50,7 +50,6 @@ public class ProductService {
     }
 
     public void delete(Long id){
-        // 존재하지 않으면 무시
         productRepository.deleteById(id);
     }
 
