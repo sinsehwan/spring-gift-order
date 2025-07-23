@@ -46,12 +46,17 @@ public class Product {
     }
 
     public void addProductOption(ProductOption productOption){
-        if(productOption != null && !this.productOptions.contains(productOption)){
-            validateIsDuplicate(productOption);
-
-            this.productOptions.add(productOption);
-            productOption.setProduct(this);
+        if(productOption == null) {
+            return;
         }
+        validateIsDuplicate(productOption);
+
+        productOptions.add(productOption);
+        productOption.assignProduct(this);
+    }
+
+    public void removeOption(ProductOption productOption){
+        productOptions.remove(productOption);
     }
 
     private void validateIsDuplicate(ProductOption newOption){

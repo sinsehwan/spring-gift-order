@@ -34,15 +34,11 @@ public class ProductOption {
         this.quantity = quantity;
     }
 
-    public void setProduct(Product product) {
+    void assignProduct(Product product) {
         if(this.product != null) {
-            this.product.getProductOptions().remove(this);
+            this.product.removeOption(this);
         }
         this.product = product;
-
-        if(product != null && !product.getProductOptions().contains(this)) {
-            product.getProductOptions().add(this);
-        }
     }
 
     public void subtractQuantity(int amount){
