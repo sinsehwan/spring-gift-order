@@ -21,7 +21,7 @@ public class Product {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private int price;
+    private Integer price;
     @Column(nullable = false)
     private String imageUrl;
 
@@ -70,13 +70,13 @@ public class Product {
     }
 
     public void updateProduct(String name, Integer price, String imageUrl) {
-        if(name != null && name.isBlank()){
+        if(name != null && !name.isBlank()){
             this.name = name;
         }
         if(price != null){
             this.price = price;
         }
-        if(imageUrl != null && imageUrl.isBlank()) {
+        if(imageUrl != null && !imageUrl.isBlank()) {
             this.imageUrl = imageUrl;
         }
     }

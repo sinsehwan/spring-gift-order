@@ -1,7 +1,7 @@
 package gift.product.controller;
 
 import gift.product.domain.Product;
-import gift.product.dto.ProductEditDto;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductInfoDto;
 import gift.product.dto.ProductOptionRequestDto;
 import gift.product.dto.ProductRequestDto;
@@ -76,7 +76,7 @@ public class ProductAdminController {
     public String editProductForm(@PathVariable("id") Long id, Model model){
         Product product = productService.getProduct(id);
 
-        model.addAttribute("product", new ProductEditDto(
+        model.addAttribute("product", new ProductEditRequestDto(
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()
@@ -89,7 +89,7 @@ public class ProductAdminController {
     @PostMapping("/edit/{id}")
     public String editProduct(
             @PathVariable("id") Long id,
-            @ModelAttribute("product") @Valid ProductEditDto editDto,
+            @ModelAttribute("product") @Valid ProductEditRequestDto requestDto,
             BindingResult bindingResult,
             Model model
     ){
@@ -98,12 +98,6 @@ public class ProductAdminController {
             return "/admin/product-edit-form";
         }
 
-        ProductRequestDto requestDto = new ProductRequestDto(
-                editDto.name(),
-                editDto.price(),
-                editDto.imageUrl(),
-                List.of(ProductOptionRequestDto.getEmpty())
-        );
         productService.update(id, requestDto);
 
         return "redirect:/admin/products/" + id;

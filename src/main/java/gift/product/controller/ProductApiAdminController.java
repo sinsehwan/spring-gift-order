@@ -1,6 +1,7 @@
 package gift.product.controller;
 
 import gift.product.domain.Product;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
@@ -56,7 +57,7 @@ public class ProductApiAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto requestDto){
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductEditRequestDto requestDto){
         productService.update(id, requestDto);
         return ResponseEntity.noContent().build();
     }

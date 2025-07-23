@@ -2,8 +2,8 @@ package gift.product.service;
 
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
-import gift.member.repository.MemberRepository;
 import gift.product.domain.Product;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductOptionRequestDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.exception.ProductNotFoundException;
@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -43,7 +41,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
     }
 
-    public void update(Long id, ProductRequestDto requestDto){
+    public void update(Long id, ProductEditRequestDto requestDto){
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
         product.updateProduct(requestDto.name(), requestDto.price(), requestDto.imageUrl());

@@ -4,6 +4,7 @@ import gift.common.ControllerTestTemplate;
 import gift.member.dto.MemberRegisterRequest;
 import gift.member.service.MemberService;
 import gift.product.domain.Product;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductOptionRequestDto;
 import gift.product.dto.ProductOptionResponseDto;
 import gift.product.dto.ProductRequestDto;
@@ -93,7 +94,7 @@ public class ProductApiControllerTest extends ControllerTestTemplate {
     void updateProduct() throws Exception{
         Long productId = product1.getId();
 
-        putWithToken("/api/admin/products/" + productId, adminToken, getProductRequest("수정된 이름", 12000, "updated"))
+        putWithToken("/api/admin/products/" + productId, adminToken, getProductEditRequest("수정된 이름", 12000, "updated"))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
@@ -125,8 +126,12 @@ public class ProductApiControllerTest extends ControllerTestTemplate {
                 .andDo(print());
     }
 
-    ProductRequestDto getProductRequest(String name, int price, String imageUrl) {
+    ProductRequestDto getProductRequest(String name, Integer price, String imageUrl){
         ProductOptionRequestDto defaultOption = new ProductOptionRequestDto("기본 옵션", 100);
         return new ProductRequestDto(name, price, imageUrl, List.of(defaultOption));
+    }
+
+    ProductEditRequestDto getProductEditRequest(String name, Integer price, String imageUrl){
+        return new ProductEditRequestDto(name, price, imageUrl);
     }
 }
