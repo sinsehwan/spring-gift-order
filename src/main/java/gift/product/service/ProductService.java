@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class ProductService {
     private final ProductRepository productRepository;
 
@@ -22,6 +21,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public Product saveProduct(ProductRequestDto requestDto){
         Product product = new Product(requestDto.name(), requestDto.price(), requestDto.imageUrl());
         requestDto.options()
@@ -32,21 +32,25 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional(readOnly = true)
     public Page<Product> getProducts(Pageable pageable){
         return productRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
     public Product getProduct(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
     }
 
+    @Transactional
     public void update(Long id, ProductEditRequestDto requestDto){
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
         product.updateProduct(requestDto.name(), requestDto.price(), requestDto.imageUrl());
     }
 
+    @Transactional
     public void delete(Long id){
         productRepository.deleteById(id);
     }

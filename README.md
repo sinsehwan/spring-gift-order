@@ -223,5 +223,5 @@
 - [x] product, productOption 연관관계 설정 메서드 리팩토링, 중복 제거
 - [x] Product update시 변경되는 필드만 접근하도록 변경
 - [x] 페이지네이션 sort 인자 에러를 PropertyReferenceException가 아닌 Controller 단에서 처리하도록 수정
-- [ ] Transactional 범위 축소
+- [x] Transactional 범위 축소
 - [ ] '카카오' 이름 사용 가능 여부 RolyType에 따라 제한하도록 수정하기
