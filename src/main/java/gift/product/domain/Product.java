@@ -69,10 +69,16 @@ public class Product {
         }
     }
 
-    public void updateProduct(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public void updateProduct(String name, Integer price, String imageUrl) {
+        if(name != null && name.isBlank()){
+            this.name = name;
+        }
+        if(price != null){
+            this.price = price;
+        }
+        if(imageUrl != null && imageUrl.isBlank()) {
+            this.imageUrl = imageUrl;
+        }
     }
 
     public Long getId(){
