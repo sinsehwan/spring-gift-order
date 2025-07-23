@@ -62,16 +62,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<Map<String, Object>> handlePropertyReferenceException(
-            PropertyReferenceException ex,
-            HttpServletRequest request
+            PropertyReferenceException ex
     ) {
-        String sortParam = request.getParameter("sort");
-
-        if(sortParam != null && sortParam.contains(ex.getPropertyName())){
-            String errMsg = ex.getPropertyName() + "는 유효하지 않은 정렬 속성입니다.";
-            return makeErrorResponseEntity(errMsg, HttpStatus.BAD_REQUEST);
-        }
-
         return makeErrorResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -1,6 +1,9 @@
 package gift.wish.controller;
 
 import gift.auth.Login;
+import gift.common.enums.ProductSortProperty;
+import gift.common.enums.WishSortProperty;
+import gift.common.validation.ValidSort;
 import gift.member.dto.MemberTokenRequest;
 import gift.wish.dto.WishListResponse;
 import gift.wish.dto.WishRequest;
@@ -43,6 +46,7 @@ public class WishApiController {
     @GetMapping
     public ResponseEntity<Page<WishListResponse>> getWishes(
             @Login MemberTokenRequest memberTokenRequest,
+            @ValidSort(enumClass = WishSortProperty.class)
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<WishListResponse> wishes = wishService.getWishes(memberTokenRequest, pageable);

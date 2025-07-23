@@ -1,5 +1,7 @@
 package gift.product.controller;
 
+import gift.common.enums.ProductSortProperty;
+import gift.common.validation.ValidSort;
 import gift.product.domain.Product;
 import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductRequestDto;
@@ -42,6 +44,7 @@ public class ProductApiAdminController {
 
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getProducts(
+            @ValidSort(enumClass = ProductSortProperty.class)
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ){
         Page<ProductResponseDto> responses = productService.getProducts(pageable)

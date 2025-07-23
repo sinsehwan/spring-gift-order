@@ -1,5 +1,7 @@
 package gift.product.controller;
 
+import gift.common.enums.ProductSortProperty;
+import gift.common.validation.ValidSort;
 import gift.product.dto.ProductInfoDto;
 import gift.product.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public class ProductController {
 
     @GetMapping
     public String products(
+            @ValidSort(enumClass = ProductSortProperty.class)
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model
     ) {
