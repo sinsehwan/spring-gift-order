@@ -1,16 +1,18 @@
-package gift.auth.oauth;
+package gift.auth.oauth.service;
 
 import gift.auth.JwtUtil;
+import gift.auth.oauth.KakaoLoginApiClient;
 import gift.auth.oauth.dto.KakaoUserInfoResponse;
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
-import gift.member.dto.MemberTokenRequest;
 import gift.member.dto.MemberTokenResponse;
 import gift.member.repository.MemberRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@Service
 public class KakaoOAuthService {
     private final KakaoLoginApiClient loginApiClient;
     private final MemberRepository memberRepository;

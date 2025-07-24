@@ -115,7 +115,7 @@ public class MemberController {
 
     private String getKakaoLoginUrl() {
         return String.format(
-                "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s",
+                "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s&scope=profile_nickname%%20account_email",
                 kakaoProperties.clientId(),
                 kakaoProperties.redirectUri()
         );
