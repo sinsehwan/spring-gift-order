@@ -21,21 +21,33 @@ public class Member {
     @Column(nullable = false)
     private RoleType role;
 
+    @Column(unique = true)
+    private Long kakaoId;
+
     protected Member() {}
 
-    public Member(Long id, String email, String password, RoleType role) {
+    public Member(Long id, String email, String password, RoleType role, Long kakaoId) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.kakaoId = kakaoId;
+    }
+
+    public Member(Long id, String email, String password, RoleType role){
+        this(id, email, password, role, null);
+    }
+
+    public Member(String email, String password, RoleType role, Long kakaoId){
+        this(null, email, password, role, kakaoId);
     }
 
     public Member(String email, String password, RoleType role) {
-        this(null, email, password, role);
+        this(null, email, password, role, null);
     }
 
     public Member(Long id){
-        this(id, null, null, null);
+        this(id, null, null, null, null);
     }
 
     public Long getId() {

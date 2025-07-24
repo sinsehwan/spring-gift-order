@@ -41,10 +41,6 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
-    public Product(Long id){
-        this(id, null, 0, null);
-    }
-
     public void addProductOption(ProductOption productOption){
         if(productOption == null) {
             return;
