@@ -22,13 +22,19 @@
 | 비밀번호 변경     | `POST`      | `/members/edit`     | 비밀번호 변경 처리  |
 | 회원 탈퇴       | `POST`      | `/members/delete`   | 회원 탈퇴 처리    |
 
+### 카카오 로그인 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- | :--- |
+| 카카오 로그인 처리 | `GET` | `/members/login/oauth2/code/kakao` | 카카오 로그인 성공 후 인가 코드를 받아 처리 |
+
 ### 상품 관리 View
 
 | 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명          |
 | :--- | :--- | :--- |:------------|
 | 상품 목록 페이지 | `GET` | `/products` | 전체 상품 목록 조회 |
 
-### 상품관리 관리자 View
+### 상품 관리 관리자 View
 | 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
 | :--- | :--- | :--- | :--- |
 | 상품 목록 조회 | `GET` | `/admin/product` | 전체 상품 목록 조회 |
@@ -36,6 +42,15 @@
 | 상품 추가 | `POST` | `/admin/product/add` | 새 상품 등록 |
 | 상품 수정 | `POST` | `/admin/product/edit/{productId}` | 상품 정보 수정 |
 | 상품 삭제 | `DELETE` | `/admin/product/{productId}` | 상품 삭제 |
+
+### 상품 옵션 관리자 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- |:---|
+| 상품 옵션 관리 페이지 | `GET` | `/admin/products/{productId}/options` | 특정 상품의 옵션 목록 및 추가/삭제 페이지 |
+| 상품 옵션 추가 | `POST` | `/admin/products/{productId}/options/add` | 특정 상품에 새 옵션 추가 |
+| 상품 옵션 삭제 | `POST` | `/admin/products/{productId}/options/delete/{optionId}` | 특정 상품의 옵션 삭제 |
+
 
 ### 회원 관리 API
 
@@ -46,7 +61,7 @@
 | 로그인 | `POST` | `/api/members/login` | Body: `MemberLoginRequest` | **200 OK** Body: JWT 토큰      |
 
 
-### 상품관리 RESTful API
+### 상품 관리 API
 
 | 기능 | HTTP Method | 엔드포인트 (Endpoint)                  | 요청 (Request) | 응답 (Response) |
 | :--- | :--- |:----------------------------------| :--- | :--- |
@@ -55,6 +70,12 @@
 | 특정 상품 조회 | `GET` | `/api/admin/products/{productId}` | Path: `productId` | **200 OK** Body: `ProductResponseDto` (상품 상세 정보) |
 | 상품 정보 수정 | `PUT` | `/api/admin/products/{productId}` | Path: `productId` Body: `ProductRequestDto` (수정할 상품 정보) | **204 No Content** Body 없음 |
 | 상품 삭제 | `DELETE` | `/api/admin/products/{productId}` | Path: `productId` (상품 ID) | **204 No Content** Body 없음 |
+
+### 상품 옵션 API
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
+| :--- | :--- | :--- | :--- |:---|
+| 상품 옵션 목록 조회 | `GET` | `/api/products/{productId}/options` | Path: `productId` | **200 OK** Body: `List<ProductOptionResponseDto>` |
 
 ## 주문하기 - 외부 API 연동
 
