@@ -18,12 +18,12 @@ public class KakaoLoginApiClient {
     private final String AUTH_URI = "https://kauth.kakao.com";
     private final String USER_API_URL = "https://kapi.kakao.com";
 
-    public KakaoLoginApiClient(KakaoProperties properties) {
+    public KakaoLoginApiClient(KakaoProperties properties, RestClient.Builder restClientBuilder) {
         this.properties = properties;
-        this.authClient = RestClient.builder()
+        this.authClient = restClientBuilder.clone()
                 .baseUrl(AUTH_URI)
                 .build();
-        this.apiClient = RestClient.builder()
+        this.apiClient = restClientBuilder.clone()
                 .baseUrl(USER_API_URL)
                 .build();
     }
