@@ -92,6 +92,11 @@
 - [x] 카카오 로그인 페이지 UI 구현
 - [x] 카카오 로그인 테스트 코드 작성
 
+### 1단계 - 코드 리뷰 반영
+
+- [x] Test code를 실행할 때 JwtUtil 대신 FakeJwtUtil 적용해서 JWT 의존성 제거 
+- [x] test용 properties 파일 정의
+
 # spring-gift-product (Mission 1)
 
 ## 상품관리 - 스프링 입문
