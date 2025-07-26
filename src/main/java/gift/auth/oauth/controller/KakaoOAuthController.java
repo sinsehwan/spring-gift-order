@@ -20,9 +20,9 @@ public class KakaoOAuthController {
 
     @GetMapping("/oauth2/code/kakao")
     public String kakaoRedirect(@RequestParam("code") String code, HttpServletResponse response){
-        MemberTokenResponse loginRequest = oAuthService.login(code);
+        MemberTokenResponse kakaoToken = oAuthService.login(code);
 
-        addTokenCookie(response, loginRequest.token());
+        addTokenCookie(response, kakaoToken.token());
 
         return "redirect:/products";
     }
