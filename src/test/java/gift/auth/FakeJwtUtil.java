@@ -2,11 +2,12 @@ package gift.auth;
 
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
+import org.springframework.beans.factory.annotation.Value;
 
 public class FakeJwtUtil extends JwtUtil {
 
     public FakeJwtUtil() {
-        super("fakeJwtSecretKey", 3600L);
+        super("fakeJwtSecretKey123456789012345678901234567890", 3600L);
     }
 
     @Override
