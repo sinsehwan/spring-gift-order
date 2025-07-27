@@ -23,7 +23,9 @@ public class AdminInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = AuthUtil.extractToken(request);
 
-        if(jwtUtil.getRoleType(token) != RoleType.ADMIN) {
+        RoleType roleType = jwtUtil.getRoleType(token);
+
+        if(roleType == RoleType.USER) {
             AuthUtil.handleAuthError(request, response, "관리자 권한이 필요합니다.");
             return false;
         }

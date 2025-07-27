@@ -10,6 +10,7 @@ import gift.member.dto.MemberTokenResponse;
 import gift.member.dto.MemberUpdateRequest;
 import gift.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -22,12 +23,19 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public MemberTokenResponse register(MemberRegisterRequest request) {
         return registerMember(request, RoleType.USER);
     }
 
+    @Transactional
     public MemberTokenResponse registerAdmin(MemberRegisterRequest request) {
         return registerMember(request, RoleType.ADMIN);
+    }
+
+    @Transactional
+    public MemberTokenResponse registerMd(MemberRegisterRequest request) {
+        return registerMember(request, RoleType.MD);
     }
 
     private MemberTokenResponse registerMember(MemberRegisterRequest request, RoleType roleType) {
@@ -40,6 +48,7 @@ public class MemberService {
         return new MemberTokenResponse(jwtUtil.generateToken(member));
     }
 
+    @Transactional(readOnly = true)
     public MemberTokenResponse login(MemberLoginRequest request) {
         Member member = memberRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
@@ -49,6 +58,7 @@ public class MemberService {
         return new MemberTokenResponse(jwtUtil.generateToken(member));
     }
 
+    @Transactional
     public void updatePassword(MemberTokenRequest memberTokenRequest, MemberUpdateRequest request) {
         checkPassword(memberTokenRequest.password(), request.password(), "현재 비밀번호가 일치하지 않습니다.");
 
@@ -57,6 +67,7 @@ public class MemberService {
         member.updatePassword(request.password());
     }
 
+    @Transactional
     public void deleteMember(MemberTokenRequest memberTokenRequest, String password) {
         checkPassword(memberTokenRequest.password(), password, "비밀번호가 일치하지 않습니다.");
 

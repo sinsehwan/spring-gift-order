@@ -1,6 +1,7 @@
 package gift.member.controller;
 
 import gift.auth.Login;
+import gift.auth.oauth.KakaoProperties;
 import gift.member.dto.MemberLoginRequest;
 import gift.member.dto.MemberRegisterRequest;
 import gift.member.dto.MemberTokenRequest;
@@ -24,14 +25,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MemberController {
 
     private final MemberService memberService;
+    private final KakaoProperties kakaoProperties;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, KakaoProperties kakaoProperties) {
         this.memberService = memberService;
+        this.kakaoProperties = kakaoProperties;
     }
 
     @GetMapping("/login")
     public String loginForm(Model model) {
+        String kakaoLoginUrl = getKakaoLoginUrl();
+
         model.addAttribute("member", MemberLoginRequest.getEmpty());
+        model.addAttribute("kakaoLoginUrl", kakaoLoginUrl);
 
         return "/members/login";
     }
@@ -105,6 +111,14 @@ public class MemberController {
         expireTokenCookie(response);
 
         return "redirect:/";
+    }
+
+    private String getKakaoLoginUrl() {
+        return String.format(
+                "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s&scope=profile_nickname%%20account_email",
+                kakaoProperties.clientId(),
+                kakaoProperties.redirectUri()
+        );
     }
 
     private void addTokenCookie(HttpServletResponse response, String token) {

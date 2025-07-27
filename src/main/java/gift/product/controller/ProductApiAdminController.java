@@ -1,6 +1,11 @@
 package gift.product.controller;
 
+import gift.auth.Login;
+import gift.common.enums.ProductSortProperty;
+import gift.common.validation.ValidSort;
+import gift.member.dto.MemberTokenRequest;
 import gift.product.domain.Product;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
@@ -33,14 +38,15 @@ public class ProductApiAdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto requestDto){
-        Product savedProduct = productService.saveProduct(requestDto);
+    public ResponseEntity<Void> addProduct(@Login MemberTokenRequest memberTokenRequest, @RequestBody @Valid ProductRequestDto requestDto){
+        productService.saveProduct(requestDto, memberTokenRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getProducts(
+            @ValidSort(enumClass = ProductSortProperty.class)
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ){
         Page<ProductResponseDto> responses = productService.getProducts(pageable)
@@ -56,7 +62,7 @@ public class ProductApiAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto requestDto){
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductEditRequestDto requestDto){
         productService.update(id, requestDto);
         return ResponseEntity.noContent().build();
     }

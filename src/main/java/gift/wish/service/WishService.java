@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 public class WishService {
 
     private final WishRepository wishRepository;
@@ -30,6 +29,7 @@ public class WishService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public WishResponse addWish(MemberTokenRequest memberTokenRequest, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + productId));
@@ -44,29 +44,31 @@ public class WishService {
         return new WishResponse(wish.getMember().getId(), wish.getProduct().getId(), 1);
     }
 
+    @Transactional(readOnly = true)
     public Page<WishListResponse> getWishes(MemberTokenRequest memberTokenRequest, Pageable pageable) {
         return wishRepository.findWishesByMemberId(memberTokenRequest.id(), pageable)
                 .map(WishListResponse::getWishListResponse);
     }
 
+    @Transactional
     public void updateQuantity(MemberTokenRequest memberTokenRequest, Long wishId, Integer quantity){
-        checkValidWishAndMember(memberTokenRequest,wishId);
+        Wish wish = checkValidWishAndMember(memberTokenRequest,wishId);
 
-        Wish wish = wishRepository.findById(wishId)
-                .orElseThrow(() -> new NoSuchElementException("해당 위시 항목을 찾을 수 없습니다."));
         wish.updateQuantity(quantity);
     }
 
+    @Transactional
     public void deleteWish(MemberTokenRequest memberTokenRequest, Long wishId){
         checkValidWishAndMember(memberTokenRequest ,wishId);
 
         wishRepository.deleteById(wishId);
     }
 
-    private void checkValidWishAndMember(MemberTokenRequest memberTokenRequest, Long wishId){
+    private Wish checkValidWishAndMember(MemberTokenRequest memberTokenRequest, Long wishId){
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> new NoSuchElementException("해당 위시 항목을 찾을 수 없습니다."));
 
         wish.validateOwner(memberTokenRequest.id());
+        return wish;
     }
 }

@@ -1,11 +1,14 @@
 package gift.product.controller;
 
 import gift.common.ControllerTestTemplate;
+import gift.member.domain.Member;
 import gift.member.dto.MemberRegisterRequest;
+import gift.member.dto.MemberTokenRequest;
+import gift.member.repository.MemberRepository;
 import gift.member.service.MemberService;
 import gift.product.domain.Product;
+import gift.product.dto.ProductEditRequestDto;
 import gift.product.dto.ProductOptionRequestDto;
-import gift.product.dto.ProductOptionResponseDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,18 +37,29 @@ public class ProductApiControllerTest extends ControllerTestTemplate {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     private Product product1;
     private Product product2;
     private String adminToken;
+    private String mdToken;
 
     @BeforeEach
     void setUp() {
-        MemberRegisterRequest request = new MemberRegisterRequest("test@gmail.com", "12345678");
 
-        adminToken = memberService.registerAdmin(request).token();
+        MemberRegisterRequest adminRequest = new MemberRegisterRequest("test@gmail.com", "12345678");
+        MemberRegisterRequest mdRequest = new MemberRegisterRequest("md@gmail.com", "12345678");
 
-        product1 = productService.saveProduct(getProductRequest("Test1", 1000, "Test1.jpg"));
-        product2 = productService.saveProduct(getProductRequest("Test2", 1200, "Test2.jpg"));
+        adminToken = memberService.registerAdmin(adminRequest).token();
+        mdToken = memberService.registerMd(mdRequest).token();
+
+        Member mdMember = memberRepository.findByEmail("md@gmail.com").get();
+        MemberTokenRequest mdTokenRequest = new MemberTokenRequest(mdMember.getId(), mdMember.getEmail(), mdMember.getPassword(), mdMember.getRole());
+
+
+        product1 = productService.saveProduct(getProductRequest("Test1", 1000, "Test1.jpg"), mdTokenRequest);
+        product2 = productService.saveProduct(getProductRequest("Test2", 1200, "Test2.jpg"), mdTokenRequest);
     }
 
     @Test
@@ -93,7 +107,7 @@ public class ProductApiControllerTest extends ControllerTestTemplate {
     void updateProduct() throws Exception{
         Long productId = product1.getId();
 
-        putWithToken("/api/admin/products/" + productId, adminToken, getProductRequest("수정된 이름", 12000, "updated"))
+        putWithToken("/api/admin/products/" + productId, adminToken, getProductEditRequest("수정된 이름", 12000, "updated"))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
@@ -116,17 +130,29 @@ public class ProductApiControllerTest extends ControllerTestTemplate {
     }
 
     @Test
-    @DisplayName("상품 등록 실패 - 유효하지 않은 상품명(카카오) - 400")
-    void addProduct_fail() throws Exception {
+    @DisplayName("ADMIN 카카오 상품 등록 실패 - 유효하지 않은 상품명(카카오) - 400")
+    void addKakaoProduct_fail() throws Exception {
 
         postWithToken("/api/admin/products", adminToken, getProductRequest("카카오 인형", 15000, "a.jpg"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.name").exists())
                 .andDo(print());
     }
 
-    ProductRequestDto getProductRequest(String name, int price, String imageUrl) {
+    @Test
+    @DisplayName("MD 카카오 상품 등록 성공 - 201")
+    void addKakaoProduct() throws Exception {
+
+        postWithToken("/api/admin/products", mdToken, getProductRequest("카카오 인형", 15000, "a.jpg"))
+                .andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    ProductRequestDto getProductRequest(String name, Integer price, String imageUrl){
         ProductOptionRequestDto defaultOption = new ProductOptionRequestDto("기본 옵션", 100);
         return new ProductRequestDto(name, price, imageUrl, List.of(defaultOption));
+    }
+
+    ProductEditRequestDto getProductEditRequest(String name, Integer price, String imageUrl){
+        return new ProductEditRequestDto(name, price, imageUrl);
     }
 }

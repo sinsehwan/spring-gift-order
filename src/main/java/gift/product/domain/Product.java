@@ -21,7 +21,7 @@ public class Product {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private int price;
+    private Integer price;
     @Column(nullable = false)
     private String imageUrl;
 
@@ -41,17 +41,18 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
-    public Product(Long id){
-        this(id, null, 0, null);
+    public void addProductOption(ProductOption productOption){
+        if(productOption == null) {
+            return;
+        }
+        validateIsDuplicate(productOption);
+
+        productOptions.add(productOption);
+        productOption.assignProduct(this);
     }
 
-    public void addProductOption(ProductOption productOption){
-        if(productOption != null && !this.productOptions.contains(productOption)){
-            validateIsDuplicate(productOption);
-
-            this.productOptions.add(productOption);
-            productOption.setProduct(this);
-        }
+    public void removeOption(ProductOption productOption){
+        productOptions.remove(productOption);
     }
 
     private void validateIsDuplicate(ProductOption newOption){
@@ -64,10 +65,16 @@ public class Product {
         }
     }
 
-    public void updateProduct(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public void updateProduct(String name, Integer price, String imageUrl) {
+        if(name != null && !name.isBlank()){
+            this.name = name;
+        }
+        if(price != null){
+            this.price = price;
+        }
+        if(imageUrl != null && !imageUrl.isBlank()) {
+            this.imageUrl = imageUrl;
+        }
     }
 
     public Long getId(){

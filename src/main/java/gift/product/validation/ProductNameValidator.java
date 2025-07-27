@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ProductNameValidator implements ConstraintValidator<ValidProductName, String> {
-    private static final Pattern ALLOWED_PATTERN = Pattern.compile("^[a-zA-Z0-9가-힣\\s\\[\\]+\\-&/_]*$");
+    private static final Pattern ALLOWED_PATTERN = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎ\\s\\[\\]+\\-&/_]*$");
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
@@ -20,10 +20,6 @@ public class ProductNameValidator implements ConstraintValidator<ValidProductNam
         else {
             if (value.length() > 15) {
                 errMsgs.add("상품 이름은 최대 15자입니다.");
-            }
-
-            if (value.contains("카카오")) {
-                errMsgs.add("상품 이름에 '카카오'는 포함될 수 없습니다. 담당 MD와 협의해 주세요.");
             }
 
             if (!ALLOWED_PATTERN.matcher(value).matches()) {

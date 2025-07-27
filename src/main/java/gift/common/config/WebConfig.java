@@ -1,4 +1,4 @@
-package gift.config;
+package gift.common.config;
 
 import gift.auth.AdminInterceptor;
 import gift.auth.LoginInterceptor;
@@ -34,6 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/members/login",
                         "/members/register",
                         "/members/login",
+                        "/members/login/oauth2/code/kakao",
                         "/",
                         "/h2-console/**"
                 );
