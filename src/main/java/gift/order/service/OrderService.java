@@ -10,7 +10,6 @@ import gift.order.dto.OrderRequestDto;
 import gift.order.dto.OrderResponseDto;
 import gift.order.repository.OrderRepository;
 import gift.product.domain.ProductOption;
-import gift.product.exception.ProductNotFoundException;
 import gift.product.repository.ProductOptionRepository;
 import gift.wish.repository.WishRepository;
 import org.springframework.stereotype.Service;
@@ -21,14 +20,12 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ProductOptionRepository optionRepository;
-    private final WishRepository wishRepository;
     private final KakaoApiClient kakaoApiClient;
 
     public OrderService(OrderRepository orderRepository, MemberRepository memberRepository, ProductOptionRepository optionRepository, WishRepository wishRepository, KakaoApiClient kakaoApiClient) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.optionRepository = optionRepository;
-        this.wishRepository = wishRepository;
         this.kakaoApiClient = kakaoApiClient;
     }
 
