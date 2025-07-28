@@ -30,13 +30,13 @@ public class OrderController {
         Wish wish = wishService.getWish(wishId);
 
         model.addAttribute("product", wish.getProduct());
-        model.addAttribute("orderRequest", OrderRequestDto.getDefault(wish.getQuantity()));
+        model.addAttribute("order", OrderRequestDto.getDefault(wish.getQuantity()));
 
         return "order/order-form";
     }
 
     @PostMapping("/create")
-    public String createOrder(@Login MemberTokenRequest memberTokenRequest, @ModelAttribute OrderRequestDto orderRequestDto) {
+    public String createOrder(@Login MemberTokenRequest memberTokenRequest, @ModelAttribute("order") OrderRequestDto orderRequestDto) {
         orderService.createOrder(orderRequestDto, memberTokenRequest);
         return "redirect:/orders/success";
     }
