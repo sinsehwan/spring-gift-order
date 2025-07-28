@@ -1,7 +1,7 @@
 package gift.auth.oauth;
 
-import gift.auth.oauth.dto.KakaoTokenResponse;
-import gift.auth.oauth.dto.KakaoUserInfoResponse;
+import gift.auth.oauth.dto.KakaoTokenResponseDto;
+import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -37,20 +37,20 @@ public class KakaoLoginApiClient {
         body.add("code", authCode);
         body.add("client_secret", properties.clientSecret());
 
-        KakaoTokenResponse tokenResponse = authClient.post()
+        KakaoTokenResponseDto tokenResponse = authClient.post()
                 .uri("/oauth/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
-                .retrieve().body(KakaoTokenResponse.class);
+                .retrieve().body(KakaoTokenResponseDto.class);
 
         return tokenResponse.accessToken();
     }
 
-    public KakaoUserInfoResponse fetchUserInfo(String accessToken) {
+    public KakaoUserInfoResponseDto fetchUserInfo(String accessToken) {
         return apiClient.get()
                 .uri("/v2/user/me")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve().body(KakaoUserInfoResponse.class);
+                .retrieve().body(KakaoUserInfoResponseDto.class);
     }
 
 }

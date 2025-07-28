@@ -1,11 +1,11 @@
 package gift.auth.oauth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.context.annotation.Profile;
 
-public record KakaoUserInfoResponse(
+public record KakaoUserInfoResponseDto(
         Long id,
-        @JsonProperty("kakao_account") KakaoAccount kakaoAccount
+        @JsonProperty("kakao_account")
+        KakaoAccount kakaoAccount
 ) {
     public record KakaoAccount(
        Profile profile,

@@ -2,7 +2,7 @@ package gift.auth.oauth.service;
 
 import gift.auth.JwtUtil;
 import gift.auth.oauth.KakaoLoginApiClient;
-import gift.auth.oauth.dto.KakaoUserInfoResponse;
+import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
 import gift.member.dto.MemberTokenResponse;
@@ -27,7 +27,7 @@ public class KakaoOAuthService {
     @Transactional
     public MemberTokenResponse login(String authCode){
         String accessToken = loginApiClient.fetchAccessToken(authCode);
-        KakaoUserInfoResponse userInfo = loginApiClient.fetchUserInfo(accessToken);
+        KakaoUserInfoResponseDto userInfo = loginApiClient.fetchUserInfo(accessToken);
 
         Member member = memberRepository.findByKakaoId(userInfo.id())
                 .orElseGet(() -> registerMemberByOAuth(userInfo));
@@ -36,7 +36,7 @@ public class KakaoOAuthService {
         return new MemberTokenResponse(memberToken);
     }
 
-    private Member registerMemberByOAuth(KakaoUserInfoResponse userInfo){
+    private Member registerMemberByOAuth(KakaoUserInfoResponseDto userInfo){
         Member newMember = new Member(
                 userInfo.kakaoAccount().email(),
                 UUID.randomUUID().toString(),

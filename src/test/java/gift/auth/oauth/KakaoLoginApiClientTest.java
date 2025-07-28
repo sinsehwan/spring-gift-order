@@ -1,8 +1,8 @@
 package gift.auth.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.auth.oauth.dto.KakaoTokenResponse;
-import gift.auth.oauth.dto.KakaoUserInfoResponse;
+import gift.auth.oauth.dto.KakaoTokenResponseDto;
+import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,7 +27,7 @@ class KakaoLoginApiClientTest {
 
     @Test
     void fetchAccessTokenTest() throws Exception {
-        String expectedToken = objectMapper.writeValueAsString(new KakaoTokenResponse("test_token"));
+        String expectedToken = objectMapper.writeValueAsString(new KakaoTokenResponseDto("test_token"));
         mockRestServiceServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
                 .andRespond(withSuccess(expectedToken, MediaType.APPLICATION_JSON));
 
@@ -39,10 +39,10 @@ class KakaoLoginApiClientTest {
 
     @Test
     void fetchUserInfoTest() throws Exception {
-        KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(
+        KakaoUserInfoResponseDto userInfo = new KakaoUserInfoResponseDto(
                 12345L,
-                new KakaoUserInfoResponse.KakaoAccount(
-                        new KakaoUserInfoResponse.Profile("test_user"),
+                new KakaoUserInfoResponseDto.KakaoAccount(
+                        new KakaoUserInfoResponseDto.Profile("test_user"),
                         "test@example.com"
                 )
         );
@@ -53,7 +53,7 @@ class KakaoLoginApiClientTest {
                 .andExpect(header("Authorization", "Bearer test_token"))
                 .andRespond(withSuccess(expectedUser, MediaType.APPLICATION_JSON));
 
-        KakaoUserInfoResponse response = kakaoLoginApiClient.fetchUserInfo("test_token");
+        KakaoUserInfoResponseDto response = kakaoLoginApiClient.fetchUserInfo("test_token");
         assertThat(response.id()).isEqualTo(12345L);
         assertThat(response.kakaoAccount().email()).isEqualTo("test@example.com");
 
