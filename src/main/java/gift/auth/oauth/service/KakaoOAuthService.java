@@ -1,7 +1,7 @@
 package gift.auth.oauth.service;
 
 import gift.auth.JwtUtil;
-import gift.auth.oauth.KakaoLoginApiClient;
+import gift.auth.oauth.KakaoApiClient;
 import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
@@ -14,11 +14,11 @@ import java.util.UUID;
 
 @Service
 public class KakaoOAuthService {
-    private final KakaoLoginApiClient loginApiClient;
+    private final KakaoApiClient loginApiClient;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
-    public KakaoOAuthService(KakaoLoginApiClient loginApiClient, MemberRepository memberRepository, JwtUtil jwtUtil){
+    public KakaoOAuthService(KakaoApiClient loginApiClient, MemberRepository memberRepository, JwtUtil jwtUtil){
         this.loginApiClient = loginApiClient;
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;

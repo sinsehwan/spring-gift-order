@@ -67,6 +67,13 @@ public class GlobalExceptionHandler {
         return makeErrorResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntimeException(
+            RuntimeException ex
+    ) {
+        return makeErrorResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     ResponseEntity<Map<String, Object>> makeErrorResponseEntity(String msg, HttpStatus status) {
         Map<String, Object> body = new HashMap<>();
         body.put("status", status.value());

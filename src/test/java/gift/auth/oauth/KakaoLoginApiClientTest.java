@@ -3,10 +3,13 @@ package gift.auth.oauth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.oauth.dto.KakaoTokenResponseDto;
 import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
+import gift.common.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -16,18 +19,27 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @EnableConfigurationProperties(KakaoProperties.class)
-@RestClientTest(KakaoLoginApiClient.class)
+@RestClientTest(KakaoApiClient.class)
 class KakaoLoginApiClientTest {
+
+    @TestConfiguration
+    static class TestConfig{
+        @Bean
+        public JsonUtil jsonUtil(ObjectMapper objectMapper) {
+            return new JsonUtil(objectMapper);
+        }
+    }
+
     @Autowired
-    private KakaoLoginApiClient kakaoLoginApiClient;
+    private KakaoApiClient kakaoLoginApiClient;
     @Autowired
     private MockRestServiceServer mockRestServiceServer;
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonUtil jsonUtil;
 
     @Test
     void fetchAccessTokenTest() throws Exception {
-        String expectedToken = objectMapper.writeValueAsString(new KakaoTokenResponseDto("test_token"));
+        String expectedToken = jsonUtil.toJson(new KakaoTokenResponseDto("test_token"));
         mockRestServiceServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
                 .andRespond(withSuccess(expectedToken, MediaType.APPLICATION_JSON));
 
@@ -47,7 +59,7 @@ class KakaoLoginApiClientTest {
                 )
         );
 
-        String expectedUser = objectMapper.writeValueAsString(userInfo);
+        String expectedUser = jsonUtil.toJson(userInfo);
 
         mockRestServiceServer.expect(requestTo("https://kapi.kakao.com/v2/user/me"))
                 .andExpect(header("Authorization", "Bearer test_token"))

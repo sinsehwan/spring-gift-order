@@ -1,7 +1,10 @@
 package gift.auth.oauth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.auth.oauth.dto.KakaoMessageDto;
 import gift.auth.oauth.dto.KakaoTokenResponseDto;
 import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
+import gift.common.util.JsonUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -10,16 +13,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class KakaoLoginApiClient {
+public class KakaoApiClient {
     private final RestClient authClient;
     private final RestClient apiClient;
     private final KakaoProperties properties;
+    private final JsonUtil jsonUtil;
 
     private final String AUTH_URI = "https://kauth.kakao.com";
     private final String USER_API_URL = "https://kapi.kakao.com";
 
-    public KakaoLoginApiClient(KakaoProperties properties, RestClient.Builder restClientBuilder) {
+    public KakaoApiClient(KakaoProperties properties, JsonUtil jsonUtil, RestClient.Builder restClientBuilder) {
         this.properties = properties;
+        this.jsonUtil = jsonUtil;
         this.authClient = restClientBuilder.clone()
                 .baseUrl(AUTH_URI)
                 .build();
@@ -53,4 +58,19 @@ public class KakaoLoginApiClient {
                 .retrieve().body(KakaoUserInfoResponseDto.class);
     }
 
+    public void sendMessageToMe(String accessToken, KakaoMessageDto messageDto) {
+        String templateJson = jsonUtil.toJson(messageDto);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+
+        body.add("template_object", templateJson);
+
+        apiClient.post()
+                .uri("/v2/api/talk/memo/default/send")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+    }
 }
