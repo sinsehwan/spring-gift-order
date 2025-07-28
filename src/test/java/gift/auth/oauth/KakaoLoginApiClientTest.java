@@ -39,12 +39,12 @@ class KakaoLoginApiClientTest {
 
     @Test
     void fetchAccessTokenTest() throws Exception {
-        String expectedToken = jsonUtil.toJson(new KakaoTokenResponseDto("test_token"));
+        String expectedToken = jsonUtil.toJson(new KakaoTokenResponseDto("test_token", "test_re"));
         mockRestServiceServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
                 .andRespond(withSuccess(expectedToken, MediaType.APPLICATION_JSON));
 
-        String token = kakaoLoginApiClient.fetchAccessToken("auth_code");
-        assertThat(token).isEqualTo("test_token");
+        KakaoTokenResponseDto token = kakaoLoginApiClient.fetchAccessToken("auth_code");
+        assertThat(token.accessToken()).isEqualTo("test_token");
 
         mockRestServiceServer.verify();
     }

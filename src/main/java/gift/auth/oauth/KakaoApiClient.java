@@ -33,7 +33,7 @@ public class KakaoApiClient {
                 .build();
     }
 
-    public String fetchAccessToken(String authCode) {
+    public KakaoTokenResponseDto fetchAccessToken(String authCode) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
         body.add("grant_type", "authorization_code");
@@ -48,7 +48,7 @@ public class KakaoApiClient {
                 .body(body)
                 .retrieve().body(KakaoTokenResponseDto.class);
 
-        return tokenResponse.accessToken();
+        return tokenResponse;
     }
 
     public KakaoUserInfoResponseDto fetchUserInfo(String accessToken) {

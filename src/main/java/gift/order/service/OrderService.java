@@ -1,6 +1,7 @@
 package gift.order.service;
 
 import gift.auth.oauth.KakaoApiClient;
+import gift.auth.oauth.dto.KakaoMessageDto;
 import gift.member.domain.Member;
 import gift.member.dto.MemberTokenRequest;
 import gift.member.repository.MemberRepository;
@@ -43,7 +44,11 @@ public class OrderService {
         Order order = new Order(option, member, requestDto.quantity(), requestDto.message());
         orderRepository.save(order);
 
-        // 카카오 유저 대상 메시지 전송 구현 필요
+        if (member.isKakaoUser()) {
+            // access token 만료 시 refresh token을 사용해서 갱신하도록 추후 보완 필요.
+            KakaoMessageDto messageDto = KakaoMessageDto.createCommerceTemplate(option.getProduct());
+            kakaoApiClient.sendMessageToMe(member.getKakaoAccessToken(), messageDto);
+        }
 
         return OrderResponseDto.from(order);
     }

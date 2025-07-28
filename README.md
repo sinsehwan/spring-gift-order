@@ -101,10 +101,11 @@
 
 - [x] orders 도메인, repository 구현
 - [x] 카카오 메시지 템플릿용 DTO 구현
-- [ ] orderService 구현 - 주문 시 상품 옵션 재고 차감 처리
+- [x] orderService 구현 - 주문 시 상품 옵션 재고 차감 처리
     - [x] 일반 로그인 사용자 : 주문만 완료
-    - [ ] 카카오 로그인 사용자 : 주문 완료 후 카카오톡 메시지 발송
+    - [x] 카카오 로그인 사용자 : 주문 완료 후 카카오톡 메시지 발송
 - [ ] orderController 구현
+- [ ] 상품 주문 페이지 구현
 
 # spring-gift-product (Mission 1)
 
