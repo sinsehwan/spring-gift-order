@@ -23,7 +23,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "option_id", nullable = false)
-    private ProductOption productOption;
+    private ProductOption option;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
@@ -41,8 +41,8 @@ public class Order {
 
     }
 
-    public Order(ProductOption productOption, Member member, int quantity, String message) {
-        this.productOption = productOption;
+    public Order(ProductOption option, Member member, int quantity, String message) {
+        this.option = option;
         this.member = member;
         this.quantity = quantity;
         this.message = message;
@@ -54,7 +54,7 @@ public class Order {
     }
 
     public ProductOption getProductOption() {
-        return productOption;
+        return option;
     }
 
     public Member getMember() {
