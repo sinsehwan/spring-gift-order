@@ -97,6 +97,15 @@
 - [x] Test code를 실행할 때 JwtUtil 대신 FakeJwtUtil 적용해서 JWT 의존성 제거 
 - [x] test용 properties 파일 정의
 
+### 2단계 - 주문하기
+
+- [ ] orders 도메인, repository 구현
+- [ ] 카카오 메시지 템플릿용 DTO 구현
+- [ ] orderservice 구현 - 주문 시 상품 옵션 재고 차감 처리
+    - [ ] 일반 로그인 사용자 : 주문만 완료
+    - [ ] 카카오 로그인 사용자 : 주문 완료 후 카카오톡 메시지 발송
+- [ ] orderController 구현
+
 # spring-gift-product (Mission 1)
 
 ## 상품관리 - 스프링 입문
