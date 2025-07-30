@@ -17,18 +17,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Transactional
+@RecordApplicationEvents
 class OrderServiceTest {
     @Autowired
     private OrderService orderService;
@@ -40,26 +38,28 @@ class OrderServiceTest {
     private ProductOptionRepository optionRepository;
     @Autowired
     private WishRepository wishRepository;
-
-    @MockitoBean
-    private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private ApplicationEvents events;
 
     private Member member;
     private Member kakaoMember;
     private Product product;
     private ProductOption option;
     private MemberTokenRequest memberTokenRequest;
+    private MemberTokenRequest kakaoMemberTokenRequest;
 
     @BeforeEach
     void setUp() {
         member = memberRepository.save(new Member("test@test.com", "password", RoleType.USER));
-        kakaoMember = memberRepository.save(new Member("kakao@gmail.com", "password", RoleType.USER, 1234L, "access token", "refresh token"));
+        kakaoMember = memberRepository.saveAndFlush(new Member("kakao@gmail.com", "password", RoleType.USER, 1234L, "access token", "refresh token"));
         product = new Product("product", 10000, "image.jpg");
         option = new ProductOption("option", 100);
         product.addProductOption(option);
         product = productRepository.save(product);
 
         memberTokenRequest = new MemberTokenRequest(member.getId(), member.getEmail(), "password", RoleType.USER);
+        kakaoMemberTokenRequest = new MemberTokenRequest(kakaoMember.getId(), kakaoMember.getEmail(), "password", RoleType.USER);
+
     }
 
     @Test
@@ -76,7 +76,8 @@ class OrderServiceTest {
         ProductOption updatedOption = optionRepository.findById(option.getId()).get();
         assertThat(updatedOption.getQuantity()).isEqualTo(90);
 
-        verify(eventPublisher, never()).publishEvent(any(KakaoOrderCompletedEvent.class));
+        boolean eventPublished = events.stream(KakaoOrderCompletedEvent.class).findAny().isPresent();
+        assertThat(eventPublished).isFalse();
     }
 
     @Test
@@ -84,9 +85,11 @@ class OrderServiceTest {
     void createOrderKakaoUser() {
         OrderRequestDto requestDto = new OrderRequestDto(option.getId(), 5, "카카오 유저 주문");
 
-        orderService.createOrder(requestDto, memberTokenRequest);
+        orderService.createOrder(requestDto, kakaoMemberTokenRequest);
 
-        verify(eventPublisher).publishEvent(any(KakaoOrderCompletedEvent.class));
+        boolean found = events.stream(KakaoOrderCompletedEvent.class)
+                .anyMatch(e -> e.productId().equals(product.getId()));
+        assertThat(found).isTrue();
     }
 
     @Test
