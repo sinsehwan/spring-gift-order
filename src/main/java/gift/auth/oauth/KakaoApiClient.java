@@ -3,6 +3,7 @@ package gift.auth.oauth;
 import gift.auth.oauth.dto.KakaoMessageDto;
 import gift.auth.oauth.dto.KakaoTokenResponseDto;
 import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
+import gift.auth.oauth.exception.KakaoApiFailedException;
 import gift.common.util.JsonUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -67,6 +68,10 @@ public class KakaoApiClient {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), (request, response) -> {
+                    String errorMsg = "카카오 API 호출 실패. 상태 코드: " + response.getStatusCode();
+                    throw new KakaoApiFailedException(errorMsg, response.getStatusCode());
+                })
                 .toBodilessEntity();
     }
 }
