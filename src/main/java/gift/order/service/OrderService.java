@@ -49,4 +49,17 @@ public class OrderService {
 
         return OrderResponseDto.from(order);
     }
+
+    @Transactional
+    public void registerOrder(OrderRequestDto requestDto, MemberTokenRequest memberTokenRequest) {
+        Member member = memberRepository.findById(memberTokenRequest.id())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        ProductOption option = optionRepository.findById(requestDto.optionId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 옵션입니다."));
+
+        option.subtractQuantity(requestDto.quantity());
+
+        Order order = new Order(option, member, requestDto.quantity(), requestDto.message());
+        orderRepository.save(order);
+    }
 }

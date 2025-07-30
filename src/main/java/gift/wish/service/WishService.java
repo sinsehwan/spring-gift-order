@@ -29,7 +29,7 @@ public class WishService {
         this.memberRepository = memberRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Wish getWish(Long wishId) {
         return wishRepository.findById(wishId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 위시리스트 항목입니다."));

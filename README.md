@@ -107,6 +107,13 @@
 - [x] orderController 구현
 - [x] 상품 주문 페이지 구현
 
+### 2단계 - 코드 리뷰 반영
+
+- [ ] kakao OAuth RestClient baseUrl 상수를 KakaoProperties로 이동
+- [ ] CreateOrder Transaction 단위 조정
+- [ ] 주문하기 시 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제하기
+- [ ] 주문하기 테스트 코드 추가
+
 # spring-gift-product (Mission 1)
 
 ## 상품관리 - 스프링 입문
