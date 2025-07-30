@@ -1,6 +1,5 @@
 package gift.product.service;
 
-import gift.member.domain.Member;
 import gift.member.domain.RoleType;
 import gift.member.dto.MemberTokenRequest;
 import gift.product.domain.Product;

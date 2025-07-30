@@ -45,7 +45,7 @@ public class OrderService {
         orderRepository.save(order);
 
         if (member.isKakaoUser()) {
-            eventPublisher.publishEvent(new KakaoOrderCompletedEvent(member.getKakaoAccessToken(), member.getKakaoRefreshToken(), option.getProduct()));
+            eventPublisher.publishEvent(new KakaoOrderCompletedEvent(member.getKakaoAccessToken(), member.getKakaoRefreshToken(), option.getProduct().getId()));
         }
 
         return OrderResponseDto.from(order);
