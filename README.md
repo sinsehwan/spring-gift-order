@@ -109,7 +109,7 @@
 
 ### 2단계 - 코드 리뷰 반영
 
-- [ ] kakao OAuth RestClient baseUrl 상수를 KakaoProperties로 이동
+- [x] kakao OAuth RestClient baseUrl 상수를 KakaoProperties로 이동
 - [ ] CreateOrder Transaction 단위 조정
 - [ ] 주문하기 시 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제하기
 - [ ] 주문하기 테스트 코드 추가
