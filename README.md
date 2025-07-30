@@ -112,7 +112,7 @@
 - [x] kakao OAuth RestClient baseUrl 상수를 KakaoProperties로 이동
 - [x] CreateOrder Transaction 단위 조정
 - [x] 주문하기 시 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제하기
-- [ ] 주문하기 테스트 코드 추가
+- [x] 주문하기 테스트 코드 추가
 
 # spring-gift-product (Mission 1)
 
