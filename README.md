@@ -51,6 +51,22 @@
 | 상품 옵션 추가 | `POST` | `/admin/products/{productId}/options/add` | 특정 상품에 새 옵션 추가 |
 | 상품 옵션 삭제 | `POST` | `/admin/products/{productId}/options/delete/{optionId}` | 특정 상품의 옵션 삭제 |
 
+### 위시리스트 관리 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- |:---|
+| 위시리스트 페이지 | `GET` | `/wishes` | 사용자의 위시리스트 목록 페이지를 표시 |
+| 위시리스트 추가 처리 | `POST` | `/wishes/add` | 상품을 위시리스트에 추가하고 목록 페이지로 리다이렉트 |
+| 위시리스트 수량 수정 처리 | `POST` | `/wishes/update/{wishId}` | 위시리스트 상품의 수량을 수정하고 목록 페이지로 리다이렉트 |
+| 위시리스트 삭제 처리 | `POST` | `/wishes/delete/{wishId}` | 위시리스트에서 상품을 삭제하고 목록 페이지로 리다이렉트 |
+
+### 주문 관리 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- |:---|
+| 주문서 작성 페이지 | `GET` | `/orders/form` | 위시리스트 ID(`wishId`)를 받아 주문서 페이지를 표시 |
+| 주문 처리 | `POST` | `/orders/create` | 주문 정보를 받아 주문을 생성하고 성공 페이지로 리다이렉트 |
+| 주문 성공 페이지 | `GET` | `/orders/success` | 주문 성공 후 표시되는 페이지 |
 
 ### 회원 관리 API
 
@@ -76,6 +92,24 @@
 | 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
 | :--- | :--- | :--- | :--- |:---|
 | 상품 옵션 목록 조회 | `GET` | `/api/products/{productId}/options` | Path: `productId` | **200 OK** Body: `List<ProductOptionResponseDto>` |
+
+
+### 위시리스트 관리 API
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
+| :--- | :--- | :--- | :--- |:---|
+| 위시리스트 추가 | `POST` | `/api/wishes` | Header: `Authorization` (JWT 토큰)<br>Body: `WishRequest` | **201 Created**<br>Body: 없음 |
+| 위시리스트 조회 | `GET` | `/api/wishes` | Header: `Authorization` (JWT 토큰)<br>Query: `page`, `size`, `sort` | **200 OK**<br>Body: `Page<WishListResponse>` (위시리스트 목록) |
+| 위시리스트 수량 수정 | `PATCH` | `/api/wishes/{wishId}` | Header: `Authorization` (JWT 토큰)<br>Path: `wishId`<br>Body: `WishUpdateRequest` | **204 No Content**<br>Body: 없음 |
+| 위시리스트 삭제 | `DELETE` | `/api/wishes/{wishId}` | Header: `Authorization` (JWT 토큰)<br>Path: `wishId` | **204 No Content**<br>Body: 없음 |
+
+
+### 주문 관리 API
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
+| :--- | :--- | :--- | :--- |:---|
+| 주문 생성 | `POST` | `/api/orders` | Header: `Authorization` (JWT 토큰)Body: `OrderRequestDto` | **201 Created**Body: `OrderResponseDto` (생성된 주문 정보) |
+
 
 ## 주문하기 - 외부 API 연동
 
