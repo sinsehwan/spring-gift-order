@@ -1,12 +1,15 @@
 package gift.auth.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.auth.oauth.dto.KakaoTokenResponse;
-import gift.auth.oauth.dto.KakaoUserInfoResponse;
+import gift.auth.oauth.dto.KakaoTokenResponseDto;
+import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
+import gift.common.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -16,44 +19,53 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @EnableConfigurationProperties(KakaoProperties.class)
-@RestClientTest(KakaoLoginApiClient.class)
+@RestClientTest(KakaoApiClient.class)
 class KakaoLoginApiClientTest {
+
+    @TestConfiguration
+    static class TestConfig{
+        @Bean
+        public JsonUtil jsonUtil(ObjectMapper objectMapper) {
+            return new JsonUtil(objectMapper);
+        }
+    }
+
     @Autowired
-    private KakaoLoginApiClient kakaoLoginApiClient;
+    private KakaoApiClient kakaoLoginApiClient;
     @Autowired
     private MockRestServiceServer mockRestServiceServer;
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonUtil jsonUtil;
 
     @Test
     void fetchAccessTokenTest() throws Exception {
-        String expectedToken = objectMapper.writeValueAsString(new KakaoTokenResponse("test_token"));
+        String expectedToken = jsonUtil.toJson(new KakaoTokenResponseDto("test_token", "test_re"));
         mockRestServiceServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
                 .andRespond(withSuccess(expectedToken, MediaType.APPLICATION_JSON));
 
-        String token = kakaoLoginApiClient.fetchAccessToken("auth_code");
-        assertThat(token).isEqualTo("test_token");
+        KakaoTokenResponseDto token = kakaoLoginApiClient.fetchAccessToken("auth_code");
+        assertThat(token.accessToken()).isEqualTo("test_token");
 
         mockRestServiceServer.verify();
     }
 
     @Test
     void fetchUserInfoTest() throws Exception {
-        KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(
+        KakaoUserInfoResponseDto userInfo = new KakaoUserInfoResponseDto(
                 12345L,
-                new KakaoUserInfoResponse.KakaoAccount(
-                        new KakaoUserInfoResponse.Profile("test_user"),
+                new KakaoUserInfoResponseDto.KakaoAccount(
+                        new KakaoUserInfoResponseDto.Profile("test_user"),
                         "test@example.com"
                 )
         );
 
-        String expectedUser = objectMapper.writeValueAsString(userInfo);
+        String expectedUser = jsonUtil.toJson(userInfo);
 
         mockRestServiceServer.expect(requestTo("https://kapi.kakao.com/v2/user/me"))
                 .andExpect(header("Authorization", "Bearer test_token"))
                 .andRespond(withSuccess(expectedUser, MediaType.APPLICATION_JSON));
 
-        KakaoUserInfoResponse response = kakaoLoginApiClient.fetchUserInfo("test_token");
+        KakaoUserInfoResponseDto response = kakaoLoginApiClient.fetchUserInfo("test_token");
         assertThat(response.id()).isEqualTo(12345L);
         assertThat(response.kakaoAccount().email()).isEqualTo("test@example.com");
 

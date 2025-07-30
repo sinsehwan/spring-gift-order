@@ -51,6 +51,22 @@
 | 상품 옵션 추가 | `POST` | `/admin/products/{productId}/options/add` | 특정 상품에 새 옵션 추가 |
 | 상품 옵션 삭제 | `POST` | `/admin/products/{productId}/options/delete/{optionId}` | 특정 상품의 옵션 삭제 |
 
+### 위시리스트 관리 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- |:---|
+| 위시리스트 페이지 | `GET` | `/wishes` | 사용자의 위시리스트 목록 페이지를 표시 |
+| 위시리스트 추가 처리 | `POST` | `/wishes/add` | 상품을 위시리스트에 추가하고 목록 페이지로 리다이렉트 |
+| 위시리스트 수량 수정 처리 | `POST` | `/wishes/update/{wishId}` | 위시리스트 상품의 수량을 수정하고 목록 페이지로 리다이렉트 |
+| 위시리스트 삭제 처리 | `POST` | `/wishes/delete/{wishId}` | 위시리스트에서 상품을 삭제하고 목록 페이지로 리다이렉트 |
+
+### 주문 관리 View
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
+| :--- | :--- | :--- |:---|
+| 주문서 작성 페이지 | `GET` | `/orders/form` | 위시리스트 ID(`wishId`)를 받아 주문서 페이지를 표시 |
+| 주문 처리 | `POST` | `/orders/create` | 주문 정보를 받아 주문을 생성하고 성공 페이지로 리다이렉트 |
+| 주문 성공 페이지 | `GET` | `/orders/success` | 주문 성공 후 표시되는 페이지 |
 
 ### 회원 관리 API
 
@@ -77,6 +93,24 @@
 | :--- | :--- | :--- | :--- |:---|
 | 상품 옵션 목록 조회 | `GET` | `/api/products/{productId}/options` | Path: `productId` | **200 OK** Body: `List<ProductOptionResponseDto>` |
 
+
+### 위시리스트 관리 API
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
+| :--- | :--- | :--- | :--- |:---|
+| 위시리스트 추가 | `POST` | `/api/wishes` | Header: `Authorization` (JWT 토큰)<br>Body: `WishRequest` | **201 Created**<br>Body: 없음 |
+| 위시리스트 조회 | `GET` | `/api/wishes` | Header: `Authorization` (JWT 토큰)<br>Query: `page`, `size`, `sort` | **200 OK**<br>Body: `Page<WishListResponse>` (위시리스트 목록) |
+| 위시리스트 수량 수정 | `PATCH` | `/api/wishes/{wishId}` | Header: `Authorization` (JWT 토큰)<br>Path: `wishId`<br>Body: `WishUpdateRequest` | **204 No Content**<br>Body: 없음 |
+| 위시리스트 삭제 | `DELETE` | `/api/wishes/{wishId}` | Header: `Authorization` (JWT 토큰)<br>Path: `wishId` | **204 No Content**<br>Body: 없음 |
+
+
+### 주문 관리 API
+
+| 기능 | HTTP Method | 엔드포인트 (Endpoint) | 요청 (Request) | 응답 (Response) |
+| :--- | :--- | :--- | :--- |:---|
+| 주문 생성 | `POST` | `/api/orders` | Header: `Authorization` (JWT 토큰)Body: `OrderRequestDto` | **201 Created**Body: `OrderResponseDto` (생성된 주문 정보) |
+
+
 ## 주문하기 - 외부 API 연동
 
 ### 0단계 -  기본 코드 준비
@@ -96,6 +130,23 @@
 
 - [x] Test code를 실행할 때 JwtUtil 대신 FakeJwtUtil 적용해서 JWT 의존성 제거 
 - [x] test용 properties 파일 정의
+
+### 2단계 - 주문하기
+
+- [x] orders 도메인, repository 구현
+- [x] 카카오 메시지 템플릿용 DTO 구현
+- [x] orderService 구현 - 주문 시 상품 옵션 재고 차감 처리
+    - [x] 일반 로그인 사용자 : 주문만 완료
+    - [x] 카카오 로그인 사용자 : 주문 완료 후 카카오톡 메시지 발송
+- [x] orderController 구현
+- [x] 상품 주문 페이지 구현
+
+### 2단계 - 코드 리뷰 반영
+
+- [x] kakao OAuth RestClient baseUrl 상수를 KakaoProperties로 이동
+- [x] CreateOrder Transaction 단위 조정
+- [x] 주문하기 시 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제하기
+- [x] 주문하기 테스트 코드 추가
 
 # spring-gift-product (Mission 1)
 

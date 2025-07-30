@@ -1,8 +1,9 @@
 package gift.auth.oauth.service;
 
 import gift.auth.JwtUtil;
-import gift.auth.oauth.KakaoLoginApiClient;
-import gift.auth.oauth.dto.KakaoUserInfoResponse;
+import gift.auth.oauth.KakaoApiClient;
+import gift.auth.oauth.dto.KakaoTokenResponseDto;
+import gift.auth.oauth.dto.KakaoUserInfoResponseDto;
 import gift.member.domain.Member;
 import gift.member.domain.RoleType;
 import gift.member.dto.MemberTokenResponse;
@@ -14,11 +15,11 @@ import java.util.UUID;
 
 @Service
 public class KakaoOAuthService {
-    private final KakaoLoginApiClient loginApiClient;
+    private final KakaoApiClient loginApiClient;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
-    public KakaoOAuthService(KakaoLoginApiClient loginApiClient, MemberRepository memberRepository, JwtUtil jwtUtil){
+    public KakaoOAuthService(KakaoApiClient loginApiClient, MemberRepository memberRepository, JwtUtil jwtUtil){
         this.loginApiClient = loginApiClient;
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
@@ -26,22 +27,24 @@ public class KakaoOAuthService {
 
     @Transactional
     public MemberTokenResponse login(String authCode){
-        String accessToken = loginApiClient.fetchAccessToken(authCode);
-        KakaoUserInfoResponse userInfo = loginApiClient.fetchUserInfo(accessToken);
+        KakaoTokenResponseDto token = loginApiClient.fetchAccessToken(authCode);
+        KakaoUserInfoResponseDto userInfo = loginApiClient.fetchUserInfo(token.accessToken());
 
         Member member = memberRepository.findByKakaoId(userInfo.id())
-                .orElseGet(() -> registerMemberByOAuth(userInfo));
+                .orElseGet(() -> registerMemberByOAuth(userInfo, token));
 
         String memberToken = jwtUtil.generateToken(member);
         return new MemberTokenResponse(memberToken);
     }
 
-    private Member registerMemberByOAuth(KakaoUserInfoResponse userInfo){
+    private Member registerMemberByOAuth(KakaoUserInfoResponseDto userInfo, KakaoTokenResponseDto token){
         Member newMember = new Member(
                 userInfo.kakaoAccount().email(),
                 UUID.randomUUID().toString(),
                 RoleType.USER,
-                userInfo.id()
+                userInfo.id(),
+                token.accessToken(),
+                token.refreshToken()
         );
         return memberRepository.save(newMember);
     }

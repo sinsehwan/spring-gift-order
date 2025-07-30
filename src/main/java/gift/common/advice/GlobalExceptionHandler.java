@@ -1,5 +1,6 @@
 package gift.common.advice;
 
+import gift.auth.oauth.exception.KakaoApiFailedException;
 import gift.product.exception.ProductNotFoundException;
 import gift.wish.exception.WishOwnerException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,6 +64,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<Map<String, Object>> handlePropertyReferenceException(
             PropertyReferenceException ex
+    ) {
+        return makeErrorResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(KakaoApiFailedException.class)
+    public ResponseEntity<Map<String, Object>> handleKakaoApiFailedException(
+            KakaoApiFailedException ex
+    ) {
+        return makeErrorResponseEntity(ex.getMessage(), ex.getStatus());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntimeException(
+            RuntimeException ex
     ) {
         return makeErrorResponseEntity(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
