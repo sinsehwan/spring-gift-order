@@ -1,16 +1,17 @@
 package gift.auth.oauth.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 public class KakaoApiFailedException extends RuntimeException {
-    private final HttpStatusCode statusCode;
+    private final HttpStatus status;
 
     public KakaoApiFailedException(String message, HttpStatusCode statusCode) {
         super(message);
-        this.statusCode = statusCode;
+        this.status = HttpStatus.resolve(statusCode.value());
     }
 
-    public HttpStatusCode getStatusCode() {
-        return statusCode;
+    public HttpStatus getStatus() {
+        return status;
     }
 }
