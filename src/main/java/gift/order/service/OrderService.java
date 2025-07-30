@@ -1,7 +1,5 @@
 package gift.order.service;
 
-import gift.auth.oauth.KakaoApiClient;
-import gift.auth.oauth.dto.KakaoMessageDto;
 import gift.auth.oauth.event.KakaoOrderCompletedEvent;
 import gift.member.domain.Member;
 import gift.member.dto.MemberTokenRequest;
@@ -12,6 +10,7 @@ import gift.order.dto.OrderResponseDto;
 import gift.order.repository.OrderRepository;
 import gift.product.domain.ProductOption;
 import gift.product.repository.ProductOptionRepository;
+import gift.wish.repository.WishRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
+    private final WishRepository wishRepository;
     private final ProductOptionRepository optionRepository;
-    private final KakaoApiClient kakaoApiClient;
     private final ApplicationEventPublisher eventPublisher;
 
-    public OrderService(OrderRepository orderRepository, MemberRepository memberRepository, ProductOptionRepository optionRepository, KakaoApiClient kakaoApiClient, ApplicationEventPublisher eventPublisher) {
+    public OrderService(OrderRepository orderRepository, MemberRepository memberRepository, WishRepository wishRepository, ProductOptionRepository optionRepository, ApplicationEventPublisher eventPublisher) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
+        this.wishRepository = wishRepository;
         this.optionRepository = optionRepository;
-        this.kakaoApiClient = kakaoApiClient;
         this.eventPublisher = eventPublisher;
     }
 
@@ -43,6 +42,9 @@ public class OrderService {
 
         Order order = new Order(option, member, requestDto.quantity(), requestDto.message());
         orderRepository.save(order);
+
+        wishRepository.findByMemberAndProduct(member, option.getProduct())
+                .ifPresent(wishRepository::delete);
 
         if (member.isKakaoUser()) {
             eventPublisher.publishEvent(new KakaoOrderCompletedEvent(member.getKakaoAccessToken(), member.getKakaoRefreshToken(), option.getProduct().getId()));
