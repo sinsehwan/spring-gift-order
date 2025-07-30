@@ -43,7 +43,12 @@ public class KakaoApiClient {
                 .uri("/oauth/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
-                .retrieve().body(KakaoTokenResponseDto.class);
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), (request, response) -> {
+                    String errorMsg = "카카오 Token 요청 API 호출 실패. 상태 코드: " + response.getStatusCode();
+                    throw new KakaoApiFailedException(errorMsg, response.getStatusCode());
+                })
+                .body(KakaoTokenResponseDto.class);
 
         return tokenResponse;
     }
@@ -52,7 +57,12 @@ public class KakaoApiClient {
         return apiClient.get()
                 .uri("/v2/user/me")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve().body(KakaoUserInfoResponseDto.class);
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), (request, response) -> {
+                    String errorMsg = "카카오 사용자 정보 API 호출 실패. 상태 코드: " + response.getStatusCode();
+                    throw new KakaoApiFailedException(errorMsg, response.getStatusCode());
+                })
+                .body(KakaoUserInfoResponseDto.class);
     }
 
     public void sendMessageToMe(String accessToken, KakaoMessageDto messageDto) {
@@ -69,7 +79,7 @@ public class KakaoApiClient {
                 .body(body)
                 .retrieve()
                 .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), (request, response) -> {
-                    String errorMsg = "카카오 API 호출 실패. 상태 코드: " + response.getStatusCode();
+                    String errorMsg = "카카오 메시지 API 호출 실패. 상태 코드: " + response.getStatusCode();
                     throw new KakaoApiFailedException(errorMsg, response.getStatusCode());
                 })
                 .toBodilessEntity();
