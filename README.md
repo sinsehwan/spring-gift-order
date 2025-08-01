@@ -152,7 +152,7 @@
 
 - [x] EC2 생성 및 배포 스크립트 작성
 - [x] GitHub Action workflow 작성
-- [ ] CORS 문제 해결
+- [x] CORS 문제 해결
 - [ ] (옵션) HTTPS 적용하기
 
 # spring-gift-product (Mission 1)
