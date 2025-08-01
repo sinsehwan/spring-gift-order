@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/build"
+          target: "/home/ubuntu/build/libs"
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
