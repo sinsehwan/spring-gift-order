@@ -41,5 +41,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export JWT_TOKEN_TIMEOUT_SEC=${{ secrets.JWT_TOKEN_TIMEOUT_SEC }}
+            export KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+            export KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
+            export KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
+            export KAKAO_AUTH_URI=${{ secrets.KAKAO_AUTH_URI }}
+            export KAKAO_USER_API_URI=${{ secrets.KAKAO_USER_API_URI }}
+            export SPRING_FRONT_DOMAIN=${{ secrets.SPRING_FRONT_DOMAIN }}
             cd /home/ubuntu
             ./deploy.sh
