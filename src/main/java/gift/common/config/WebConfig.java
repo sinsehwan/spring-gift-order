@@ -40,7 +40,12 @@ public class WebConfig implements WebMvcConfigurer {
                         "/members/login",
                         "/members/login/oauth2/code/kakao",
                         "/",
-                        "/h2-console/**"
+                        "/h2-console/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/error",
+                        "/favicon.ico"
                 );
 
         registry.addInterceptor(adminInterceptor)
