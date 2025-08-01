@@ -5,7 +5,9 @@
     <a href="/products" class="nav-brand">🎁 GiftShop</a>
     <nav class="nav-items">
         <div class="nav-items">
-            <a href="/products" class="nav-link">상품 목록</a>
+            <th:block th:if="${isLoggedIn}">
+                <a href="/products" class="nav-link">상품 목록</a>
+            </th:block>
 
             <th:block th:if="${isLoggedIn}">
                 <a href="/members/mypage" class="nav-link">마이페이지</a>

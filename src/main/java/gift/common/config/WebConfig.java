@@ -67,8 +67,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .maxAge(3600);
     }
-
-    public void addCorsMappingPath(CorsRegistry registry, String pathPattern) {
-    }
-
 }
