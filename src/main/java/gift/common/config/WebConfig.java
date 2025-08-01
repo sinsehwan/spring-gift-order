@@ -60,21 +60,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        addCorsMappingPath(registry, "/api/**");
-        addCorsMappingPath(registry, "/admin/**");
-        addCorsMappingPath(registry, "/members/**");
-        addCorsMappingPath(registry, "/products/**");
-        addCorsMappingPath(registry, "/wishes/**");
-        addCorsMappingPath(registry, "/orders/**");
-    }
-
-    public void addCorsMappingPath(CorsRegistry registry, String pathPattern) {
-        registry.addMapping(pathPattern)
+        registry.addMapping("/**")
                 .allowedOrigins(frontDomain)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
+    }
+
+    public void addCorsMappingPath(CorsRegistry registry, String pathPattern) {
     }
 
 }
