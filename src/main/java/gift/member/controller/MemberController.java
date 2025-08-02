@@ -39,13 +39,13 @@ public class MemberController {
         model.addAttribute("member", MemberLoginRequest.getEmpty());
         model.addAttribute("kakaoLoginUrl", kakaoLoginUrl);
 
-        return "/members/login";
+        return "members/login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute("member") MemberLoginRequest loginRequest, HttpServletResponse response, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
-            return "/members/login";
+            return "members/login";
         }
         MemberTokenResponse tokenResponse = memberService.login(loginRequest);
 
@@ -57,7 +57,7 @@ public class MemberController {
     public String registerForm(Model model) {
         model.addAttribute("member", MemberRegisterRequest.getEmpty());
 
-        return "/members/register";
+        return "members/register";
     }
 
     @PostMapping("/register")
