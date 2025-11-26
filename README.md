@@ -43,7 +43,6 @@
 | 상품 수정 | `POST` | `/admin/product/edit/{productId}` | 상품 정보 수정 |
 | 상품 삭제 | `DELETE` | `/admin/product/{productId}` | 상품 삭제 |
 
-
 ### 상품 옵션 관리자 View
 
 | 기능 | HTTP Method | 엔드포인트 (Endpoint) | 설명 |
